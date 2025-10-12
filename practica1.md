@@ -144,3 +144,54 @@ Cuando el robot alcanza un **punto crítico** desde el cual no puede avanzar, se
   - `PATH_POINT`: parte del camino que el robot seguira.
   - `CRITICAL_POINT`: celda donde se llegó a un punto crítico.
   - `RETURN_POINT`: puntos de retorno previamente detectados.
+
+
+## Paso 4 — Control del movimiento
+### Objetivo
+
+Seguir la trayectoria calculada usando controladores proporcionales (P) para velocidad lineal y angular.
+El robot debe desplazarse por las coordenadas planificadas en Gazebo, corrigiendo su orientación y distancia a cada punto.
+
+## Funcionamiento `follow_path`
+
+1. Convertir las celdas (col, row) a coordenadas del mundo:
+```python
+u = col * GRID_SIZE
+v = row * GRID_SIZE
+x, y = image_to_gazebo(u - 18, v - 18, M)
+gazebo_path.append((x + 0.15, y - 0.1))
+```
+
+2. Recorrer la lista gazebo_path:
+
+    - Obtener la posición actual (HAL.getPose3d()).
+
+    - Calcular:
+
+        - Error de distancia: dx, dy, distance
+
+        - Ángulo deseado: desired_yaw = atan2(dy, dx)
+
+        - Error angular normalizado a [-π, π].
+
+    - Control proporcional:
+
+        - Si el giro es muy grande (>150°): girar sobre el sitio.
+
+        - Si no: avanzar y girar simultáneamente.
+
+    - Limitar velocidades (MAX_LINEAL_SPEED, MAX_ANGULAR_SPEED).
+
+    - Enviar comandos:
+        ```python
+        HAL.setV(linear_speed)
+        HAL.setW(angular_speed)
+        ```
+    - Si la distancia al objetivo < threshold, pasar al siguiente punto.
+
+## Video
+
+<video width="720" height="405" controls>
+  <source src="media/P1_robotica_servicio.webm" type="video/mp4">
+  Tu navegador no soporta reproducción de video.
+</video>
