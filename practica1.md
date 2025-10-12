@@ -9,7 +9,7 @@ para ello se han seguido los siguientes pasos:
  - Planificación de ruta siguiendo algoritmo de cobertura BSA
  - Pilotaje reactivo para ejecutar la ruta planificada.
 
- ## Paso 1 — Registro del mapa (calibración / transformación afín)
+## Paso 1 — Registro del mapa (calibración / transformación afín)
 
 ### Objetivo
 El objetivo de este paso es **relacionar las coordenadas de la imagen (en píxeles)** con las **coordenadas reales del mundo de Gazebo (en metros)**.  
@@ -58,3 +58,40 @@ Para obtener estos parametros en la funcionm `compute_affine_matrix` se plantea 
 4. Se forma la matriz M de 3×3.
 
 5. Las funciones `gazebo_to_image` y `image_to_gazebo` aplican la transformación y su inversa, para ello se multiplica la matriz M por el vector de puntos de gazebo en caso de querer pasar a la imagen, y se usa la inversa de M en caso de querer pasar de la imagen al gazebo
+
+## Paso 2 - Creación de la rejilla (discretización del mapa)
+
+### Objetivo
+
+Convertir el mapa (imagen) en una rejilla de celdas discretas, donde cada celda representa una zona del entorno: libre, sucia u ocupada por un obstáculo.
+Esto facilita aplicar algoritmos de búsqueda y planificación de trayectorias.
+
+### Proceso de preprocesamiento
+1. Cargar el mapa:
+```python
+map_png = WebGUI.getMap('/resources/.../mapgrannyannie.png')
+```
+
+2. Convertir a escala de grises → cv2.cvtColor
+
+3. Binarizar con cv2.threshold:
+    - 0 → libre
+    - 255 → obstáculo
+
+4. Erosionar con cv2.erode para engrosar obstáculos (seguridad de colisión).
+
+5. Dividir el mapa en celdas y asignar valores.
+
+### Función `create_grid(eroded_map)`
+
+1. Se crea un array con el numero de pixeles de ancho de la imagen entre el numero de pixeles de ancho de las celdas(decidido por nosotros), eso define el numero de celdas a lo ancho, se hace lo mismo en vertical.
+
+2. Se recorre el mapa y se marca cada bloque:
+    ```python
+    if np.any(block == 0):
+        grid_map[i, j] = OCCUPY_GRID
+    else:
+        grid_map[i, j] = DIRTY_GRID
+    ```
+
+Con esto cada celdilla queda marcada como ocupada (cualquiera de sus pixles esta ocupado), o como sucia (celda libre disponible para limpiar)
