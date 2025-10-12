@@ -2,4 +2,4 @@
 
 Bienvenido al blog con todas las prácticas.
 
-- [Práctica 1: Introducción](practica1.md)
+- [Práctica 1: Programacion de una aspiradora localizada](practica1.md)
