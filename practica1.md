@@ -95,3 +95,52 @@ map_png = WebGUI.getMap('/resources/.../mapgrannyannie.png')
     ```
 
 Con esto cada celdilla queda marcada como ocupada (cualquiera de sus pixles esta ocupado), o como sucia (celda libre disponible para limpiar)
+
+
+## Paso 3 — Algoritmo de trayectoria (BSA + BFS para puntos de retorno)
+
+### Objetivo
+El objetivo es calcular una **trayectoria de cobertura completa** para el robot, de manera que visite todas las celdas libres del mapa.  
+
+El algoritmo principal es **BSA (Backtracking Spiral Algorithm)**,que permite que el robot explore el área siguiendo un **patrón en espiral con retroceso**.  
+Cuando el robot alcanza un **punto crítico** desde el cual no puede avanzar, se utiliza **BFS** únicamente para volver al **punto de retorno más cercano** y continuar la cobertura.
+
+---
+
+### ⚙️ Flujo general
+
+1. **Inicio**
+   - Obtener la posición inicial del robot en Gazebo y convertirla a celda `(cell_row, cell_col)`.
+   - Marcar la celda inicial como parte del **path** (`PATH_POINT`).
+   - Inicializar lista de **puntos de retorno** vacía: `return_points = []`.
+
+2. **BSA: exploración local**
+   - Revisar las celdas vecinas **N, E, S, O**.
+   - Si el vecino es libre (`DIRTY_GRID`) o un punto de retorno (`RETURN_POINT`):
+     - Se añade al **path**.
+     - Se marca como `PATH_POINT`.
+     - Los vecinos libres de esa celda se agregan a `return_points` (si no estaban ya).
+   - Actualizar la posición actual del robot.
+
+3. **Punto crítico**
+   - Si no hay vecinos libres disponibles:
+     - Marcar la celda actual como **CRITICAL_POINT**.
+     - Si `return_points` no está vacío:
+       - Seleccionar el **punto de retorno más cercano** usando **BFS**:
+         ```python
+         path_to_goal, found_goal = bfs_pathfinding(grid_map, current_cell, return_points)
+         ```
+       - Agregar el camino hasta ese punto al **path general**.
+       - Eliminar ese punto de `return_points`.
+     - Continuar la cobertura con BSA desde el nuevo punto.
+
+4. **Repetir** hasta que **todas las celdas libres hayan sido visitadas** y `return_points` esté vacío.
+
+---
+
+### Notas importantes
+
+- Las celdas se codifican de la siguiente manera:
+  - `PATH_POINT`: parte del camino que el robot seguira.
+  - `CRITICAL_POINT`: celda donde se llegó a un punto crítico.
+  - `RETURN_POINT`: puntos de retorno previamente detectados.
