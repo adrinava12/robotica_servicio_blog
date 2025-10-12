@@ -192,6 +192,6 @@ gazebo_path.append((x + 0.15, y - 0.1))
 ## Video
 
 <video width="720" height="405" controls>
-  <source src="media/P1_robotica_servicio.webm" type="video/mp4">
+  <source src="media/P1_video_rapido.webm" type="video/webm">
   Tu navegador no soporta reproducción de video.
 </video>
