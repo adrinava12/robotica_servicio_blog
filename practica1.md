@@ -191,4 +191,4 @@ gazebo_path.append((x + 0.15, y - 0.1))
 
 ## Video
 
-[Ver demostración del algoritmo BSA + BFS](media/P1_video_rapido.mp4)
+[Ver demostración del algoritmo BSA + BFS](https://drive.google.com/file/d/1JiYsmy1oFb0xamBCG1dJQGLLetYsYVIk/view?usp=sharing)
