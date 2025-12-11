@@ -9,3 +9,5 @@ Bienvenido al blog con todas las prácticas.
 - [Practica 3: Autoaparcamiento](practica3.md)
 
 - [Practica 4: Robot de Logistica](practica4.md)
+
+- [Practica 5: Mapeado por Laser](practica5.md)
