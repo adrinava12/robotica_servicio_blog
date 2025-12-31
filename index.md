@@ -12,4 +12,4 @@ Bienvenido al blog con todas las prácticas.
 
 - [Practica 5: Mapeado por Laser](practica5.md)
 
- [Practica 6:Localizacion por marcadores visuales](practica6.md)
+- [Practica 6:Localizacion por marcadores visuales](practica6.md)
