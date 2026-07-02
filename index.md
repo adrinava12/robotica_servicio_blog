@@ -12,6 +12,6 @@ Bienvenido al blog con todas las prácticas.
 
 - [Practica 5: Mapeado por Laser](practica5.md)
 
-- [Practica 5*: Mapeado por Laser](practiva5*.md)
+- [Practica 5 Junio: Mapeado por Laser](practiva5Junio.md)
 
 - [Practica 6:Localizacion por marcadores visuales](practica6.md)
